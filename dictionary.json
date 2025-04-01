@@ -1,0 +1,3444 @@
+
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Oxford Dictionaries API",
+      "description": "The Oxford Dictionaries API allows easy access to our world-renowned dictionary content. Use the left hand navigation to explore the features of each endpoint and view their response schemas.",
+      "version": "3.0.1"
+    },
+    "servers": [
+      {
+        "url": "https://od-api-sandbox.oxforddictionaries.com/api/v2",
+        "description": "OD-API Sandbox"
+      },
+      {
+        "url": "https://od-api.oxforddictionaries.com/api/v2",
+        "description": "OD-API Live"
+      }
+    ],
+    "paths": {
+      "/entries/{source_lang}/{word_id}": {
+        "get": {
+          "tags": [
+            "Entries"
+          ],
+          "summary": "Retrieve dictionary entry",
+          "description": "\nUse this to retrieve definitions, [pronunciations](https://developer.oxforddictionaries.com/documentation/glossary?term=pronunciation), example sentences, [grammatical information](https://developer.oxforddictionaries.com/documentation/glossary?term=grammaticalfeatures) and [word origins](https://developer.oxforddictionaries.com/documentation/glossary?term=etymology).\n\nTIP: Entries ONLY works for dictionary headwords. You may need to use the Lemmas endpoint first to link an inflected form back to its headword (e.g., pixels --> pixel). Alternatively, you can use the Words endpoint, a feature that enables you to retrieve definitions, pronunciations, word origins, and grammatical data across headwords and inflected words with just one call to the API.\n\nUse filters to limit the [entry](https://developer.oxforddictionaries.com/documentation/glossary?term=entry) information that is returned. For example, you may only require definitions and not everything else, or just [pronunciations](https://developer.oxforddictionaries.com/documentation/glossary?term=pronunciation). The full list of filters can be retrieved from the filters Utility endpoint. You can also specify values within the filter using '='. For example 'grammaticalFeatures=singular'. Filters can also be combined.\n\nCombining different filters will build a query using 'AND' operators, while if a filter contains more than one value it will build a query using 'OR' operators. For example, a combination of filters like '?grammaticalFeatures=singular&lexicalCategory=noun,verb' will return entries which match the query ('noun' OR 'verb') AND 'singular'.\n\n<div id=\"dictionary_entries_filters\"></div>\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangMonolingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/wordIdParam"
+            },
+            {
+              "$ref": "#/components/parameters/fieldsParam"
+            },
+            {
+              "$ref": "#/components/parameters/grammaticalFeaturesParam"
+            },
+            {
+              "$ref": "#/components/parameters/lexicalCategoryParam"
+            },
+            {
+              "$ref": "#/components/parameters/domainsParam"
+            },
+            {
+              "$ref": "#/components/parameters/registersParam"
+            },
+            {
+              "$ref": "#/components/parameters/strictMatchParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EntriesResults"
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/components/responses/InvalidParams"
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "$ref": "#/components/responses/EntryNotFound"
+            },
+            "414": {
+              "$ref": "#/components/responses/UrlTooLong"
+            },
+            "429": {
+              "$ref": "#/components/responses/UsageLimitError"
+            },
+            "500": {
+              "$ref": "#/components/responses/InternalError"
+            }
+          }
+        }
+      },
+      "/lemmas/{source_lang}/{word_id}": {
+        "get": {
+          "tags": [
+            "Lemmas"
+          ],
+          "summary": "Retrieve word's root form",
+          "description": "\nUse this to check if a word exists in the dictionary, or what 'root' form it links to (e.g., swimming > swim). The response tells you the possible [lemmas](https://developer.oxforddictionaries.com/documentation/glossary?term=lemma) for a given [inflected](https://developer.oxforddictionaries.com/documentation/glossary?term=inflection) word. This can then be combined with other endpoints to retrieve more information.\n\nThe results can be filtered by lexicalCategories and/or grammaticalFeatures. Filters can be combined.\n\nCombining different filters will build a query using 'AND' operators, while if a filter contains more than one value it will build a query using 'OR' operators. For example, a combination of filters like '?grammaticalFeatures=singular&lexicalCategory=noun,verb' will return entries which match the query ('noun' OR 'verb') AND 'singular'.\n",
+          "parameters": [
+            {
+              "name": "source_lang",
+              "in": "path",
+              "description": "Language code of the source language in a monolingual dataset.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "en",
+                  "de",
+                  "es",
+                  "hi",
+                  "it",
+                  "lv",
+                  "pt",
+                  "ro",
+                  "ta"
+                ]
+              }
+            },
+            {
+              "$ref": "#/components/parameters/wordIdParam"
+            },
+            {
+              "$ref": "#/components/parameters/grammaticalFeaturesParam"
+            },
+            {
+              "$ref": "#/components/parameters/lexicalCategoryParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LemmasResults"
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/components/responses/InvalidParams"
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "$ref": "#/components/responses/EntryNotFound"
+            },
+            "414": {
+              "$ref": "#/components/responses/UrlTooLong"
+            },
+            "429": {
+              "$ref": "#/components/responses/UsageLimitError"
+            },
+            "500": {
+              "$ref": "#/components/responses/InternalError"
+            }
+          }
+        }
+      },
+      "/inflections/{source_lang}/{word_id}": {
+        "get": {
+          "tags": [
+            "Inflections"
+          ],
+          "summary": "Retrieves inflected forms",
+          "description": "Retrieve all the [inflections](https://developer.oxforddictionaries.com/documentation/glossary?term=inflection) of a given word_id. The inflections\nare given for a lexicalEntry with a specific lexicalCategory.\n",
+          "parameters": [
+            {
+              "name": "source_lang",
+              "in": "path",
+              "description": "Language code of the source language in a monolingual dataset.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "en-gb",
+                  "en-us",
+                  "es",
+                  "hi",
+                  "lv",
+                  "ro",
+                  "ta"
+                ]
+              }
+            },
+            {
+              "$ref": "#/components/parameters/wordIdParam"
+            },
+            {
+              "$ref": "#/components/parameters/strictMatchParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/InflectionsResults"
+                  }
+                }
+              }
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "$ref": "#/components/responses/EntryNotFound"
+            },
+            "414": {
+              "$ref": "#/components/responses/UrlTooLong"
+            },
+            "429": {
+              "$ref": "#/components/responses/UsageLimitError"
+            },
+            "500": {
+              "$ref": "#/components/responses/InternalError"
+            }
+          }
+        }
+      },
+      "/search/{source_lang}": {
+        "get": {
+          "tags": [
+            "Search"
+          ],
+          "summary": "Find dictionary entries",
+          "description": "\nUse this to retrieve possible [headword](https://developer.oxforddictionaries.com/documentation/glossary?term=headword) matches for a given string of text. The results are calculated using headword matching, fuzzy matching, and [lemmatization](https://developer.oxforddictionaries.com/documentation/glossary?term=lemma).\n\n  <div id=\"search\"></div>\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangMonolingualParam"
+            },
+            {
+              "name": "q",
+              "in": "query",
+              "description": "Search string",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "prefix",
+              "in": "query",
+              "description": "Use prefix=true to return only results that start with the value of the \"q\" parameter.",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Restricts number of returned results. Default and max. is 5000.",
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "offset",
+              "in": "query",
+              "description": "Pagination - results offset.  The sum of offset and limit must not exceed 10000.",
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "$ref": "#/components/responses/SearchSuccessfulResponse"
+            },
+            "400": {
+              "$ref": "#/components/responses/SearchInvalidParams"
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "$ref": "#/components/responses/SearchNotFound"
+            },
+            "429": {
+              "$ref": "#/components/responses/UsageLimitError"
+            },
+            "500": {
+              "$ref": "#/components/responses/InternalError"
+            }
+          }
+        }
+      },
+      "/search/thesaurus/{source_lang}": {
+        "get": {
+          "tags": [
+            "Search"
+          ],
+          "summary": "Find thesaurus entries",
+          "description": "\nUse this to retrieve possible [headword](https://developer.oxforddictionaries.com/documentation/glossary?term=headword) matches for a given string of text. The results are calculated using headword matching, fuzzy matching, and [lemmatization](https://developer.oxforddictionaries.com/documentation/glossary?term=lemma).\n\n  <div id=\"search\"></div>\n",
+          "parameters": [
+            {
+              "name": "source_lang",
+              "in": "path",
+              "description": "Language code of the source language in a Thesaurus dataset.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "en"
+                ]
+              }
+            },
+            {
+              "name": "q",
+              "in": "query",
+              "description": "Search string",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "prefix",
+              "in": "query",
+              "description": "Use prefix=true to return only results that start with the value of the \"q\" parameter.",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Restricts number of returned results. Default and max. is 5000.",
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "offset",
+              "in": "query",
+              "description": "Pagination - results offset.  The sum of offset and limit must not exceed 10000.",
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "$ref": "#/components/responses/SearchSuccessfulResponse"
+            },
+            "400": {
+              "$ref": "#/components/responses/SearchInvalidParams"
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "$ref": "#/components/responses/SearchNotFound"
+            },
+            "429": {
+              "$ref": "#/components/responses/UsageLimitError"
+            },
+            "500": {
+              "$ref": "#/components/responses/InternalError"
+            }
+          }
+        }
+      },
+      "/search/translations/{source_lang}/{target_lang}": {
+        "get": {
+          "tags": [
+            "Search"
+          ],
+          "summary": "Find entries with translations",
+          "description": "\nUse this to find possible headwords with translations for a given word.\n\n<div id=\"search_translation\"></div>\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangBilingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/targetLangBilingualParam"
+            },
+            {
+              "name": "q",
+              "in": "query",
+              "description": "Search string",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "prefix",
+              "in": "query",
+              "description": "Use prefix=true to return only results that start with the value of the \"q\" parameter.",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Restricts number of returned results. Default and max. is 5000.",
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "offset",
+              "in": "query",
+              "description": "pagination - results offset.  The sum of offset and limit must not exceed 10000.",
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "$ref": "#/components/responses/SearchSuccessfulResponse"
+            },
+            "400": {
+              "$ref": "#/components/responses/SearchInvalidParams"
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "$ref": "#/components/responses/SearchNotFound"
+            },
+            "429": {
+              "$ref": "#/components/responses/UsageLimitError"
+            },
+            "500": {
+              "$ref": "#/components/responses/InternalError"
+            }
+          }
+        }
+      },
+      "/translations/{source_lang}/{target_lang}/{word_id}": {
+        "get": {
+          "tags": [
+            "Translations"
+          ],
+          "summary": "Retrieve translations",
+          "description": "\nUse this to return translations for a given word. In the event that a word in the dataset does not have a direct translation, the response will be a [definition](https://developer.oxforddictionaries.com/documentation/glossary?term=entry) in the target language.\n\n  <div id=\"translation\"></div>\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangBilingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/targetLangBilingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/wordIdParam"
+            },
+            {
+              "$ref": "#/components/parameters/strictMatchParam"
+            },
+            {
+              "$ref": "#/components/parameters/translationsFieldsParam"
+            },
+            {
+              "$ref": "#/components/parameters/grammaticalFeaturesParam"
+            },
+            {
+              "$ref": "#/components/parameters/lexicalCategoryParam"
+            },
+            {
+              "$ref": "#/components/parameters/domainsParam"
+            },
+            {
+              "$ref": "#/components/parameters/registersParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EntriesResults"
+                  }
+                }
+              }
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "description": "no bilingual entry is found matching supplied source_lang and id\nand/or that entry has no senses with translations in the target language.\n",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorSchema"
+                  }
+                }
+              }
+            },
+            "414": {
+              "$ref": "#/components/responses/UrlTooLong"
+            },
+            "429": {
+              "$ref": "#/components/responses/UsageLimitError"
+            },
+            "500": {
+              "$ref": "#/components/responses/InternalError"
+            }
+          }
+        }
+      },
+      "/thesaurus/{source_lang}/{word_id}": {
+        "get": {
+          "tags": [
+            "Thesaurus"
+          ],
+          "summary": "Retrieve thesaurus entries",
+          "description": "Use this to retrieve words that are similar/opposite in meaning to the input word ([synonym](https://developer.oxforddictionaries.com/documentation/glossary?term=synonym)/[antonym](https://developer.oxforddictionaries.com/documentation/glossary?term=antonym)).\n\nTip: Some Entries responses contain sense-level links to a Thesaurus entry by the property \"thesaurusLink\". For instance:\n\n```@javascript\n  {\n    \"thesaurusLinks\": [\n                            {\n                                \"entry_id\": \"abide_by\",\n                                \"sense_id\": \"t_en_gb0000029.003\"\n                            }\n                        ]\n  }\n\n```\n<div id=\"synonyms\"></div>\n",
+          "parameters": [
+            {
+              "name": "source_lang",
+              "in": "path",
+              "description": "Language code of the source language in a Thesaurus dataset.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "en"
+                ]
+              }
+            },
+            {
+              "$ref": "#/components/parameters/wordIdParam"
+            },
+            {
+              "name": "fields",
+              "in": "query",
+              "description": "A comma-separated list of data fields to return for the matched entries.\nWhat to return - if specified, either 'synonyms', 'antonyms' or 'synonyms,antonyms'\nIt cannot be empty.\n",
+              "allowEmptyValue": false,
+              "style": "form",
+              "explode": false,
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "synonyms",
+                    "antonyms"
+                  ]
+                }
+              }
+            },
+            {
+              "$ref": "#/components/parameters/strictMatchParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ThesaurusResults"
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/components/responses/InvalidParams"
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "$ref": "#/components/responses/EntryNotFound"
+            },
+            "414": {
+              "$ref": "#/components/responses/UrlTooLong"
+            },
+            "429": {
+              "$ref": "#/components/responses/UsageLimitError"
+            },
+            "500": {
+              "$ref": "#/components/responses/InternalError"
+            }
+          }
+        }
+      },
+      "/sentences/{source_lang}/{word_id}": {
+        "get": {
+          "tags": [
+            "Sentences"
+          ],
+          "summary": "Retrieve example sentences",
+          "description": "\nUse this to retrieve sentences extracted from a corpus of real-world language, including news and blog content. This is available for English and Spanish. For English, the sentences are linked to the correct [sense](https://developer.oxforddictionaries.com/documentation/glossary?term=sense) of the word in the dictionary. In Spanish, they are linked at the [headword](https://developer.oxforddictionaries.com/documentation/glossary?term=headword) level.\n  <div id=\"sentences\"></div>\n",
+          "parameters": [
+            {
+              "name": "source_lang",
+              "in": "path",
+              "description": "Language code of the source language.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "en",
+                  "es"
+                ]
+              }
+            },
+            {
+              "$ref": "#/components/parameters/wordIdParam"
+            },
+            {
+              "$ref": "#/components/parameters/strictMatchParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SentencesResults"
+                  }
+                }
+              }
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "$ref": "#/components/responses/EntryNotFound"
+            },
+            "414": {
+              "$ref": "#/components/responses/UrlTooLong"
+            },
+            "429": {
+              "$ref": "#/components/responses/UsageLimitError"
+            },
+            "500": {
+              "$ref": "#/components/responses/InternalError"
+            }
+          }
+        }
+      },
+      "/words/{source_lang}": {
+        "get": {
+          "tags": [
+            "Words"
+          ],
+          "summary": "Retrieve dictionary entries of a word",
+          "description": "\nUse this endpoint to retrieve definitions, examples and other information for a given dictionary word or an inflection (e.g., running > run). The response contains information about the lemmas to which the given word/inflected form is linked.\n\nThe results can be filtered by lexicalCategories, domains, registers or grammaticalFeatures. Filters can be combined.\n\nIn addition, users can use fields to project some of the properties.\n\nCombining different filters will build a query using 'AND' operators, while if a filter contains more than one value it will build a query using 'OR' operators. For example, a combination of filters like '?grammaticalFeatures=singular&lexicalCategory=noun,verb' will return entries which match the query ('noun' OR 'verb') AND 'singular'.\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangMonolingualParam"
+            },
+            {
+              "name": "q",
+              "in": "query",
+              "description": "The word or inflection to retrieve. This parameter is NOT case-sensitive.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "default": "swimming"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/fieldsParam"
+            },
+            {
+              "$ref": "#/components/parameters/grammaticalFeaturesParam"
+            },
+            {
+              "$ref": "#/components/parameters/domainsParam"
+            },
+            {
+              "$ref": "#/components/parameters/lexicalCategoryParam"
+            },
+            {
+              "$ref": "#/components/parameters/registersParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EntriesResults"
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/components/responses/InvalidParams"
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "$ref": "#/components/responses/EntryNotFound"
+            },
+            "414": {
+              "$ref": "#/components/responses/UrlTooLong"
+            },
+            "429": {
+              "$ref": "#/components/responses/UsageLimitError"
+            },
+            "500": {
+              "$ref": "#/components/responses/InternalError"
+            }
+          }
+        }
+      },
+      "/languages": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Returns Dictionary names",
+          "description": "Returns the names of monolingual and bilingual language datasets available in the API\n",
+          "parameters": [
+            {
+              "name": "sourceLanguage",
+              "in": "query",
+              "description": "Source Language. If provided, output will be filtered by sourceLanguage.",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "targetLanguage",
+              "in": "query",
+              "description": "Target Language. If provided, output will be filtered by targetLanguage.",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Languages"
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/components/responses/TranslationsBadRequest"
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "$ref": "#/components/responses/LanguageNotFound"
+            }
+          }
+        }
+      },
+      "/filters": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists available filters",
+          "description": "Returns a list of all the valid filters to construct API requests.\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Filters"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/filters/{endpoint}": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists filters by endpoint",
+          "description": "Returns a list of all the valid filters by endpoint to construct API requests.\n",
+          "parameters": [
+            {
+              "name": "endpoint",
+              "in": "path",
+              "description": "Name of the endpoint.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "entries",
+                  "lemmas"
+                ]
+              }
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Filters"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/EndpointNotFound"
+            }
+          }
+        }
+      },
+      "/fields": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists available fields",
+          "description": "Returns a list of the available fields to construct API requests.\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Filters"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/fields/{endpoint}": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists fields by endpoint",
+          "description": "Returns the lists of fields available to construct API requests for a given endpoint.\n",
+          "parameters": [
+            {
+              "name": "endpoint",
+              "in": "path",
+              "description": "Name of the endpoint",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "entries",
+                  "thesaurus"
+                ]
+              }
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Filters"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/EndpointNotFound"
+            }
+          }
+        }
+      },
+      "/lexicalCategories/{source_lang}": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists lexical categories",
+          "description": "Returns a list of available [lexical categories](https://developer.oxforddictionaries.com/documentation/glossary?term=lexicalcategory) for a given language dataset.\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangMonolingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UtilityLabels"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/LanguageNotFound"
+            }
+          }
+        }
+      },
+      "/lexicalCategories/{source_lang}/{target_lang}": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists lexical categories (bilingual)",
+          "description": "Returns a list of available [lexical categories](https://developer.oxforddictionaries.com/documentation/glossary?term=lexicalcategory) for a given bilingual dataset.\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangBilingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/targetLangBilingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UtilityLabels"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/LanguageNotFound"
+            }
+          }
+        }
+      },
+      "/registers/{source_lang}": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists registers",
+          "description": "Returns a list of the available [registers](https://developer.oxforddictionaries.com/documentation/glossary?term=registers) for a given monolingual language dataset.\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangMonolingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UtilityLabels"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/LanguageNotFound"
+            }
+          }
+        }
+      },
+      "/registers/{source_lang}/{target_lang}": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists registers (bilingual)",
+          "description": "Returns a list of the available [registers](https://developer.oxforddictionaries.com/documentation/glossary?term=registers) for a given bilingual language dataset.\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangBilingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/targetLangBilingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UtilityLabels"
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/components/responses/TranslationsBadRequest"
+            },
+            "404": {
+              "$ref": "#/components/responses/LanguageNotFound"
+            }
+          }
+        }
+      },
+      "/domains/{source_lang}": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists domains",
+          "description": "Returns a list of the available [domains](https://developer.oxforddictionaries.com/documentation/glossary?term=domain) for a given monolingual language dataset.\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangMonolingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UtilityLabels"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/LanguageNotFound"
+            }
+          }
+        }
+      },
+      "/domains/{source_lang}/{target_lang}": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists domains (bilingual)",
+          "description": "Returns a list of the available [domains](https://developer.oxforddictionaries.com/documentation/glossary?term=domain) for a given bilingual language dataset.\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangBilingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/targetLangBilingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UtilityLabels"
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/components/responses/TranslationsBadRequest"
+            },
+            "404": {
+              "$ref": "#/components/responses/LanguageNotFound"
+            }
+          }
+        }
+      },
+      "/grammaticalFeatures/{source_lang}": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists grammatical features",
+          "description": "Returns a list of the available [grammatical features](https://developer.oxforddictionaries.com/documentation/glossary?term=grammaticalfeatures) for a given monolingual dataset.\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangMonolingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UtilityLabels"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/LanguageNotFound"
+            }
+          }
+        }
+      },
+      "/grammaticalFeatures/{source_lang}/{target_lang}": {
+        "get": {
+          "tags": [
+            "Utility"
+          ],
+          "summary": "Lists grammatical features (bilingual)",
+          "description": "Returns a list of the available [grammatical features](https://developer.oxforddictionaries.com/documentation/glossary?term=grammaticalfeatures) for a given bilingual dataset.\n",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangBilingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/targetLangBilingualParam"
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UtilityLabels"
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/components/responses/TranslationsBadRequest"
+            },
+            "404": {
+              "$ref": "#/components/responses/LanguageNotFound"
+            }
+          }
+        }
+      },
+      "/pronunciations/{source_lang}/{word_id}": {
+        "get": {
+          "tags": [
+            "Pronunciations (Coming Soon)"
+          ],
+          "summary": "Retrieve pronunciations",
+          "description": "*We are currently in the alpha stage of releasing a new Pronunciations endpoint. If you would like to take part in shaping the development of this endpoint please get in touch [here](https://developer.oxforddictionaries.com/contact-us) and a member of the OD API team will be in touch with more information.*\n\nThis endpoint retrieves and groups pronunciation based on the specified word, language, and optional [lexical category](https://developer.oxforddictionaries.com/documentation/glossary?term=lexicalcategory). It supports querying for pronunciation details such as transcription and lexical categories for strict matching of the word. The lexical category parameter allows filtering results by part of speech, providing targeted pronunciation data. This endpoint is designed to efficiently pull and aggregate pronunciation data. Results include detailed transcriptions grouped by lexical categories, offering a comprehensive view of the available pronunciations for a given word in the specified language.",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/sourceLangPronunciationParam"
+            },
+            {
+              "$ref": "#/components/parameters/wordIdParam"
+            },
+            {
+              "name": "lexicalCategory",
+              "in": "query",
+              "description": "Selection filter: a lexical category id to match on (default: all categories).",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/appId"
+            },
+            {
+              "$ref": "#/components/parameters/appKey"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "headers": {
+                "X-Request-Id": {
+                  "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PronunciationResult"
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/components/responses/InvalidParams"
+            },
+            "403": {
+              "$ref": "#/components/responses/MissingAuthentication"
+            },
+            "404": {
+              "$ref": "#/components/responses/EntryNotFound"
+            },
+            "414": {
+              "$ref": "#/components/responses/UrlTooLong"
+            },
+            "429": {
+              "$ref": "#/components/responses/UsageLimitError"
+            },
+            "500": {
+              "$ref": "#/components/responses/InternalError"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "PronunciationResult": {
+          "title": "Pronunciation results",
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "type": "object",
+              "properties": {},
+              "description": "Additional Information provided by OUP"
+            },
+            "results": {
+              "minItems": 1,
+              "type": "array",
+              "description": "A list of pronunciations matching a given word.",
+              "items": {
+                "description": "An individual pronunciation entry for a specific word.",
+                "type": "object",
+                "required": [
+                  "language",
+                  "word",
+                  "pronunciations"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "language": {
+                    "description": "IANA language code.",
+                    "type": "string"
+                  },
+                  "word": {
+                    "description": "The word being pronounced.",
+                    "type": "string"
+                  },
+                  "pronunciations": {
+                    "description": "A list of pronunciations for the word.",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "description": "An individual pronunciation entry.",
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "lexicalCategory",
+                        "transcription"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "id": {
+                          "description": "Unique identifier for the pronunciation group.",
+                          "type": "string"
+                        },
+                        "lexicalCategory": {
+                          "description": "A linguistic category of words (or more precisely lexical items), generally defined by the syntactic or morphological behaviour of the lexical item in question, such as noun or verb",
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/1"
+                          }
+                        },
+                        "transcription": {
+                          "description": "Phonetic transcription of the word.",
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "EntriesResults": {
+          "title": "Entries results",
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "type": "object",
+              "properties": {},
+              "description": "Additional Information provided by OUP"
+            },
+            "results": {
+              "minItems": 1,
+              "type": "array",
+              "description": "A list of entries and all the data related to them",
+              "items": {
+                "allOf": [
+                  {
+                    "required": [
+                      "id",
+                      "language",
+                      "lexicalEntries",
+                      "word"
+                    ],
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The identifier of a word"
+                      },
+                      "language": {
+                        "type": "string",
+                        "description": "IANA language code"
+                      },
+                      "lexicalEntries": {
+                        "minItems": 1,
+                        "type": "array",
+                        "description": "A grouping of various senses in a specific language, and a lexical category that relates to a word",
+                        "items": {
+                          "allOf": [
+                            {
+                              "required": [
+                                "language",
+                                "lexicalCategory",
+                                "text"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "entries": {
+                                  "minItems": 1,
+                                  "type": "array",
+                                  "items": {
+                                    "allOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "etymologies": {
+                                            "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                                          },
+                                          "homographNumber": {
+                                            "type": "string",
+                                            "description": "Identifies the homograph grouping. The last two digits identify different entries of the same homograph. The first one/two digits identify the homograph number."
+                                          },
+                                          "senses": {
+                                            "minItems": 1,
+                                            "type": "array",
+                                            "description": "Complete list of senses",
+                                            "items": {
+                                              "title": "Sense schema",
+                                              "allOf": [
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "datasetCrossLinks": {
+                                                      "minItems": 1,
+                                                      "type": "array",
+                                                      "description": "List of links to entries in other datasets",
+                                                      "items": {
+                                                        "required": [
+                                                          "language"
+                                                        ],
+                                                        "properties": {
+                                                          "language": {
+                                                            "type": "string",
+                                                            "description": "language of the dictionary where the linked sense can be found"
+                                                          }
+                                                        },
+                                                        "description": "Link to a specific sense of an entry in another dictionary",
+                                                        "allOf": [
+                                                          {
+                                                            "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/0/properties/senses/items/allOf/0/properties/subsenses/items/allOf/0/properties/thesaurusLinks/items/allOf/0"
+                                                          }
+                                                        ]
+                                                      }
+                                                    },
+                                                    "definitions": {
+                                                      "description": "A list of statements of the exact meaning of a word",
+                                                      "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                                                    },
+                                                    "etymologies": {
+                                                      "description": "The origin of the word and the way in which its meaning has changed throughout history",
+                                                      "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                                                    },
+                                                    "shortDefinitions": {
+                                                      "description": "A list of short statements of the exact meaning of a word",
+                                                      "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                                                    },
+                                                    "id": {
+                                                      "type": "string",
+                                                      "description": "The id of the sense that is required for the delete procedure"
+                                                    },
+                                                    "subsenses": {
+                                                      "minItems": 1,
+                                                      "type": "array",
+                                                      "description": "Ordered list of subsenses of a sense",
+                                                      "items": {
+                                                        "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/0/properties/senses/items"
+                                                      }
+                                                    },
+                                                    "thesaurusLinks": {
+                                                      "minItems": 1,
+                                                      "type": "array",
+                                                      "description": "Ordered list of links to the Thesaurus Dictionary",
+                                                      "items": {
+                                                        "description": "Link to a specific sense of an entry in the thesaurus Dictionary",
+                                                        "allOf": [
+                                                          {
+                                                            "required": [
+                                                              "entry_id",
+                                                              "sense_id"
+                                                            ],
+                                                            "type": "object",
+                                                            "properties": {
+                                                              "entry_id": {
+                                                                "type": "string",
+                                                                "description": "identifier of a word"
+                                                              },
+                                                              "sense_id": {
+                                                                "type": "string",
+                                                                "description": "identifier of a sense"
+                                                              }
+                                                            },
+                                                            "description": "Link to a sense"
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  },
+                                                  "description": "A lexical sense represents the lexical meaning of a lexical entry when interpreted as referring to the corresponding ontology element"
+                                                },
+                                                {
+                                                  "$ref": "#/paths/~1thesaurus~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/0/properties/senses/items/allOf/1"
+                                                },
+                                                {
+                                                  "$ref": "#/components/schemas/InflectionsResults/properties/results/items/properties/lexicalEntries/items/allOf/1"
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "constructions": {
+                                                      "description": "A construction provides information about typical syntax used of this sense. Each construction may optionally have one or more examples. Constructions may be translated if there is an equivalent in the target language.",
+                                                      "type": "array",
+                                                      "items": {
+                                                        "allOf": [
+                                                          {
+                                                            "type": "object",
+                                                            "properties": {
+                                                              "text": {
+                                                                "description": "The construction text",
+                                                                "type": "string"
+                                                              },
+                                                              "examples": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                  "type": "array",
+                                                                  "description": "An array of text with examples.",
+                                                                  "items": {
+                                                                    "type": "string"
+                                                                  }
+                                                                },
+                                                                "minItems": 1
+                                                              }
+                                                            },
+                                                            "required": [
+                                                              "text"
+                                                            ]
+                                                          },
+                                                          {
+                                                            "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/1"
+                                                          },
+                                                          {
+                                                            "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/4"
+                                                          },
+                                                          {
+                                                            "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/1"
+                                                          },
+                                                          {
+                                                            "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/2"
+                                                          },
+                                                          {
+                                                            "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/8"
+                                                          }
+                                                        ],
+                                                        "minItems": 1
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/1"
+                                                },
+                                                {
+                                                  "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/2"
+                                                },
+                                                {
+                                                  "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/3"
+                                                },
+                                                {
+                                                  "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/1"
+                                                },
+                                                {
+                                                  "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/4"
+                                                },
+                                                {
+                                                  "$ref": "#/components/schemas/ThesaurusResults/properties/results/items/properties/lexicalEntries/items/allOf/3"
+                                                },
+                                                {
+                                                  "$ref": "#/paths/~1thesaurus~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/0/properties/senses/items/allOf/2"
+                                                },
+                                                {
+                                                  "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/1"
+                                                },
+                                                {
+                                                  "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/2"
+                                                },
+                                                {
+                                                  "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/8"
+                                                },
+                                                {
+                                                  "$ref": "#/paths/~1thesaurus~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/0/properties/senses/items/allOf/6"
+                                                },
+                                                {
+                                                  "$ref": "#/paths/~1thesaurus~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/0/properties/senses/items/allOf/7"
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "$ref": "#/components/schemas/InflectionsResults/properties/results/items/properties/lexicalEntries/items/allOf/1"
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "crossReferenceMarkers": {
+                                            "description": "A grouping of crossreference notes.",
+                                            "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "crossReferences": {
+                                            "minItems": 1,
+                                            "type": "array",
+                                            "description": "A reference to another word that is closely related, might provide additional information about the subject, has a variant spelling or is an abbreviated form of it.",
+                                            "items": {
+                                              "type": "object",
+                                              "additionalProperties": false,
+                                              "description": "cross references of a sense",
+                                              "required": [
+                                                "id",
+                                                "text",
+                                                "type"
+                                              ],
+                                              "properties": {
+                                                "id": {
+                                                  "description": "The word id of the co-occurrence",
+                                                  "type": "string"
+                                                },
+                                                "text": {
+                                                  "description": "The word of the co-occurrence",
+                                                  "type": "string"
+                                                },
+                                                "type": {
+                                                  "description": "The type of relation between the two words. Possible values are 'close match', 'related', 'see also', 'variant spelling', and 'abbreviation' in case of crossreferences, or 'pre', 'post' in case of collocates.",
+                                                  "type": "string"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/2"
+                                      },
+                                      {
+                                        "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/1"
+                                      },
+                                      {
+                                        "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/4"
+                                      },
+                                      {
+                                        "$ref": "#/components/schemas/ThesaurusResults/properties/results/items/properties/lexicalEntries/items/allOf/3"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "derivatives": {
+                                  "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/0/properties/phrases"
+                                },
+                                "compounds": {
+                                  "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/0/properties/phrases"
+                                },
+                                "phrases": {
+                                  "minItems": 1,
+                                  "type": "array",
+                                  "description": "A list of written or spoken words",
+                                  "items": {
+                                    "allOf": [
+                                      {
+                                        "type": "object",
+                                        "required": [
+                                          "text",
+                                          "id"
+                                        ],
+                                        "properties": {
+                                          "text": {
+                                            "type": "string"
+                                          },
+                                          "language": {
+                                            "description": "IANA language code specifying the language of the word",
+                                            "type": "string"
+                                          },
+                                          "id": {
+                                            "description": "The identifier of the word",
+                                            "type": "string"
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/1"
+                                      },
+                                      {
+                                        "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/2"
+                                      },
+                                      {
+                                        "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/8"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "phrasalVerbs": {
+                                  "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/0/properties/phrases"
+                                },
+                                "derivativeOf": {
+                                  "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/0/properties/phrases"
+                                },
+                                "language": {
+                                  "type": "string",
+                                  "description": "IANA language code"
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "description": "A given written or spoken realisation of an entry."
+                                },
+                                "root": {
+                                  "type": "string",
+                                  "description": "Abstract root form from which this lexicalEntry is derived."
+                                }
+                              },
+                              "description": "Description of an entry for a particular part of speech"
+                            },
+                            {
+                              "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/1"
+                            },
+                            {
+                              "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/2"
+                            },
+                            {
+                              "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/1"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "notes": {
+                                  "minItems": 1,
+                                  "type": "array",
+                                  "description": "various types of notes that appear",
+                                  "items": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "required": [
+                                      "text",
+                                      "type"
+                                    ],
+                                    "properties": {
+                                      "text": {
+                                        "description": "A note text",
+                                        "type": "string"
+                                      },
+                                      "type": {
+                                        "description": "The descriptive category of the text",
+                                        "type": "string"
+                                      },
+                                      "id": {
+                                        "description": "The identifier of the word",
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "$ref": "#/components/schemas/ThesaurusResults/properties/results/items/properties/lexicalEntries/items/allOf/3"
+                            }
+                          ]
+                        }
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The json object type. Could be 'headword', 'inflection' or 'phrase'"
+                      },
+                      "word": {
+                        "type": "string",
+                        "description": "(DEPRECATED) A given written or spoken realisation of an entry, lowercased."
+                      }
+                    },
+                    "description": "Group of lexicalEntries related to a specific result for a given word ID."
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "pronunciations": {
+                        "minItems": 1,
+                        "type": "array",
+                        "description": "A list of possible pronunciations of a word",
+                        "items": {
+                          "allOf": [
+                            {
+                              "minProperties": 1,
+                              "type": "object",
+                              "description": "A grouping of pronunciation information",
+                              "properties": {
+                                "phoneticNotation": {
+                                  "description": "The alphabetic system used to display the phonetic spelling",
+                                  "type": "string"
+                                },
+                                "phoneticSpelling": {
+                                  "description": "Phonetic spelling is the representation of vocal sounds which express pronunciations of words. It is a system of spelling in which each letter represents invariably the same spoken sound",
+                                  "type": "string"
+                                },
+                                "audioFile": {
+                                  "description": "The URL of the sound file",
+                                  "type": "string"
+                                },
+                                "dialects": {
+                                  "description": "A local or regional variation where the pronunciation occurs, e.g. 'British English'",
+                                  "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                                }
+                              }
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "registers": {
+                                  "description": "A level of language usage, typically with respect to formality. e.g. 'offensive', 'informal'",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "text": {
+                                        "type": "string"
+                                      },
+                                      "id": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "regions": {
+                                  "description": "A particular area in which the pronunciation occurs, e.g. 'Great Britain'",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "text": {
+                                        "type": "string"
+                                      },
+                                      "id": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "description": "Schema for the 'entries', 'translations' and 'words' endpoints"
+        },
+        "LemmasResults": {
+          "title": "Lemmas results",
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "type": "object",
+              "properties": {},
+              "description": "Additional Information provided by OUP"
+            },
+            "results": {
+              "minItems": 1,
+              "type": "array",
+              "description": "A list of inflections matching a given word",
+              "items": {
+                "required": [
+                  "id",
+                  "language",
+                  "lexicalEntries",
+                  "word"
+                ],
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The identifier of a word"
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "IANA language code"
+                  },
+                  "lexicalEntries": {
+                    "minItems": 1,
+                    "type": "array",
+                    "description": "A grouping of various senses in a specific language, and a lexical category that relates to a word",
+                    "items": {
+                      "allOf": [
+                        {
+                          "required": [
+                            "inflectionOf",
+                            "language",
+                            "lexicalCategory",
+                            "text"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "inflectionOf": {
+                              "minItems": 1,
+                              "type": "array",
+                              "description": "A grouping of the modifications of a word to express different grammatical categories",
+                              "items": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                  "text",
+                                  "id"
+                                ],
+                                "properties": {
+                                  "text": {
+                                    "type": "string"
+                                  },
+                                  "id": {
+                                    "description": "The identifier of the word",
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            },
+                            "language": {
+                              "type": "string",
+                              "description": "IANA language code"
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "A given written or spoken realisation of an entry."
+                            }
+                          },
+                          "description": "Description of an entry for a particular part of speech and grammatical features"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "lexicalCategory": {
+                              "description": "A linguistic category of words (or more precisely lexical items), generally defined by the syntactic or morphological behaviour of the lexical item in question, such as noun or verb",
+                              "required": [
+                                "id",
+                                "text"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "text": {
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "grammaticalFeatures": {
+                              "minItems": 1,
+                              "type": "array",
+                              "description": "The different forms are correlated with meanings or functions which we text as 'features'",
+                              "items": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                  "text",
+                                  "type",
+                                  "id"
+                                ],
+                                "properties": {
+                                  "text": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string"
+                                  },
+                                  "id": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "The json object type. Could be 'headword', 'inflection' or 'phrase'"
+                  },
+                  "word": {
+                    "type": "string",
+                    "description": "(DEPRECATED) A given written or spoken realisation of an entry, lowercased."
+                  }
+                },
+                "additionalProperties": false,
+                "description": "Description of an inflected form of a word"
+              }
+            }
+          },
+          "description": "Schema for the Lemmas endpoint."
+        },
+        "InflectionsResults": {
+          "title": "Inflections results",
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "type": "object",
+              "properties": {},
+              "description": "Additional Information provided by OUP"
+            },
+            "results": {
+              "minItems": 1,
+              "type": "array",
+              "description": "A list of headwords matching a given word",
+              "items": {
+                "required": [
+                  "id",
+                  "language",
+                  "lexicalEntries"
+                ],
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The identifier of a word"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "A given written or spoken realisation of an entry."
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "IANA language code"
+                  },
+                  "lexicalEntries": {
+                    "minItems": 1,
+                    "type": "array",
+                    "description": "A grouping of various senses in a specific language, and a lexical category that relates to a word",
+                    "items": {
+                      "allOf": [
+                        {
+                          "required": [
+                            "language",
+                            "lexicalCategory"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "language": {
+                              "type": "string",
+                              "description": "IANA language code"
+                            }
+                          },
+                          "description": "Description of an entry for a particular part of speech and grammatical features"
+                        },
+                        {
+                          "title": "Inflections",
+                          "type": "object",
+                          "properties": {
+                            "inflections": {
+                              "minItems": 1,
+                              "type": "array",
+                              "description": "A list of inflected forms for a lexicalEntry.",
+                              "items": {
+                                "allOf": [
+                                  {
+                                    "required": [
+                                      "inflectedForm"
+                                    ],
+                                    "type": "object",
+                                    "properties": {
+                                      "inflectedForm": {
+                                        "type": "string",
+                                        "description": "Canonical form of an inflection"
+                                      }
+                                    },
+                                    "description": "Description of an Inflected form."
+                                  },
+                                  {
+                                    "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/1"
+                                  },
+                                  {
+                                    "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/2"
+                                  },
+                                  {
+                                    "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/1"
+                                  },
+                                  {
+                                    "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/1"
+                                  },
+                                  {
+                                    "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/2"
+                                  },
+                                  {
+                                    "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/8"
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/1"
+                        },
+                        {
+                          "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/2"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "additionalProperties": false,
+                "description": "Description of an inflected form of a word"
+              }
+            }
+          },
+          "description": "Schema for the inflections endpoint."
+        },
+        "Wordlist": {
+          "title": "Search results",
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "string",
+                  "description": "Approximate number of results that match the given query."
+                }
+              },
+              "description": "Additional Information provided by OUP"
+            },
+            "results": {
+              "minItems": 0,
+              "type": "array",
+              "description": "A list of found words",
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Description of found word",
+                "required": [
+                  "id",
+                  "word"
+                ],
+                "properties": {
+                  "id": {
+                    "description": "The identifier of a word",
+                    "type": "string"
+                  },
+                  "word": {
+                    "description": "(DEPRECATED) A given written or spoken realisation of an entry, lowercased.",
+                    "type": "string"
+                  },
+                  "matchString": {
+                    "type": "string"
+                  },
+                  "matchType": {
+                    "type": "string"
+                  },
+                  "region": {
+                    "description": "Name of region.",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Schema for wordlist endpoint."
+        },
+        "ThesaurusResults": {
+          "title": "Thesaurus results",
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "type": "object",
+              "properties": {},
+              "description": "Additional Information provided by OUP"
+            },
+            "results": {
+              "minItems": 1,
+              "type": "array",
+              "description": "A list of found synonyms or antonyms",
+              "items": {
+                "required": [
+                  "id",
+                  "language",
+                  "lexicalEntries",
+                  "word"
+                ],
+                "type": "object",
+                "properties": {
+                  "word": {
+                    "type": "string",
+                    "description": "(DEPRECATED) A given written or spoken realisation of an entry, lowercased."
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "The identifier of a word"
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "IANA language code"
+                  },
+                  "lexicalEntries": {
+                    "minItems": 1,
+                    "type": "array",
+                    "description": "A grouping of various senses in a specific language, and a lexical category that relates to a word",
+                    "items": {
+                      "allOf": [
+                        {
+                          "required": [
+                            "language",
+                            "lexicalCategory",
+                            "text"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "entries": {
+                              "minItems": 1,
+                              "type": "array",
+                              "items": {
+                                "allOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "homographNumber": {
+                                        "type": "string",
+                                        "description": "Identifies the homograph grouping. The last two digits identify different entries of the same homograph. The first one/two digits identify the homograph number."
+                                      },
+                                      "senses": {
+                                        "minItems": 1,
+                                        "type": "array",
+                                        "description": "Complete list of senses",
+                                        "items": {
+                                          "title": "Thesaurus senses",
+                                          "allOf": [
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "id": {
+                                                  "type": "string",
+                                                  "description": "The id of the sense that is required for the delete procedure"
+                                                },
+                                                "subsenses": {
+                                                  "minItems": 1,
+                                                  "type": "array",
+                                                  "description": "subsenses of word",
+                                                  "items": {
+                                                    "$ref": "#/components/schemas/ThesaurusResults/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/0/properties/senses/items"
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "examples": {
+                                                  "description": "A list of written or spoken rendering of examples of use of a word or text",
+                                                  "$ref": "#/components/schemas/SentencesResults/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences"
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "title": "Synonyms and Antonyms",
+                                              "type": "object",
+                                              "properties": {
+                                                "antonyms": {
+                                                  "minItems": 1,
+                                                  "type": "array",
+                                                  "items": {
+                                                    "allOf": [
+                                                      {
+                                                        "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/1"
+                                                      },
+                                                      {
+                                                        "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/2"
+                                                      },
+                                                      {
+                                                        "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/8"
+                                                      },
+                                                      {
+                                                        "type": "object",
+                                                        "required": [
+                                                          "text"
+                                                        ],
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "string"
+                                                          },
+                                                          "language": {
+                                                            "type": "string"
+                                                          },
+                                                          "text": {
+                                                            "type": "string"
+                                                          }
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                },
+                                                "synonyms": {
+                                                  "minItems": 1,
+                                                  "type": "array",
+                                                  "items": {
+                                                    "allOf": [
+                                                      {
+                                                        "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/1"
+                                                      },
+                                                      {
+                                                        "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/2"
+                                                      },
+                                                      {
+                                                        "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/8"
+                                                      },
+                                                      {
+                                                        "type": "object",
+                                                        "required": [
+                                                          "text"
+                                                        ],
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "string"
+                                                          },
+                                                          "language": {
+                                                            "type": "string"
+                                                          },
+                                                          "text": {
+                                                            "type": "string"
+                                                          }
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/1"
+                                            },
+                                            {
+                                              "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/2"
+                                            },
+                                            {
+                                              "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/8"
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "domainClasses": {
+                                                  "description": "Defines domain class label.",
+                                                  "type": "array",
+                                                  "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "text": {
+                                                        "type": "string"
+                                                      },
+                                                      "id": {
+                                                        "type": "string"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "semanticClasses": {
+                                                  "description": "Defines semantic class label.",
+                                                  "type": "array",
+                                                  "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "text": {
+                                                        "type": "string"
+                                                      },
+                                                      "id": {
+                                                        "type": "string"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          ],
+                                          "description": "A lexical sense represents the lexical meaning of a lexical entry when interpreted as referring to the corresponding ontology element"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/2"
+                                  },
+                                  {
+                                    "$ref": "#/components/schemas/ThesaurusResults/properties/results/items/properties/lexicalEntries/items/allOf/3"
+                                  }
+                                ]
+                              }
+                            },
+                            "language": {
+                              "type": "string",
+                              "description": "IANA language code"
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "A given written or spoken realisation of an entry."
+                            }
+                          },
+                          "description": "Description of an entry for a particular part of speech"
+                        },
+                        {
+                          "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/1"
+                        },
+                        {
+                          "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/2"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "variantForms": {
+                              "minItems": 1,
+                              "type": "array",
+                              "description": "Various words that are used interchangeably depending on the context, e.g 'aluminium' and 'aluminum'",
+                              "items": {
+                                "allOf": [
+                                  {
+                                    "type": "object",
+                                    "required": [
+                                      "text"
+                                    ],
+                                    "properties": {
+                                      "text": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/1"
+                                  },
+                                  {
+                                    "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/4"
+                                  },
+                                  {
+                                    "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/1"
+                                  },
+                                  {
+                                    "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/2"
+                                  },
+                                  {
+                                    "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/8"
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "The json object type. Could be 'headword', 'inflection' or 'phrase'"
+                  }
+                },
+                "additionalProperties": false,
+                "description": "description of thesaurus information of a word"
+              }
+            }
+          },
+          "description": "Schema for thesaurus endpoint"
+        },
+        "SentencesResults": {
+          "title": "Sentences results",
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "type": "object",
+              "properties": {},
+              "description": "Additional Information provided by OUP"
+            },
+            "results": {
+              "minItems": 1,
+              "type": "array",
+              "description": "A list of entries and all the data related to them",
+              "items": {
+                "required": [
+                  "id",
+                  "language",
+                  "lexicalEntries",
+                  "word"
+                ],
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The identifier of a word"
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "IANA language code"
+                  },
+                  "lexicalEntries": {
+                    "minItems": 1,
+                    "type": "array",
+                    "description": "A grouping of various senses in a specific language, and a lexical category that relates to a word",
+                    "items": {
+                      "allOf": [
+                        {
+                          "required": [
+                            "language",
+                            "sentences",
+                            "lexicalCategory",
+                            "text"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "language": {
+                              "type": "string",
+                              "description": "IANA language code"
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "A given written or spoken realisation of an entry."
+                            },
+                            "sentences": {
+                              "minItems": 1,
+                              "type": "array",
+                              "description": "A list of written or spoken rendering of examples of use of a word or text",
+                              "items": {
+                                "allOf": [
+                                  {
+                                    "type": "object",
+                                    "required": [
+                                      "text"
+                                    ],
+                                    "properties": {
+                                      "definitions": {
+                                        "description": "A list of statements of the exact meaning of a word",
+                                        "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                                      },
+                                      "senseIds": {
+                                        "description": "The list of sense identifiers related to the example. Provided in the sentences endpoint only.",
+                                        "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                                      },
+                                      "text": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "translations": {
+                                        "minItems": 1,
+                                        "type": "array",
+                                        "description": "A list of written or spoken rendering of the meaning of a word or text in another language(s)",
+                                        "items": {
+                                          "allOf": [
+                                            {
+                                              "type": "object",
+                                              "required": [
+                                                "text",
+                                                "language"
+                                              ],
+                                              "properties": {
+                                                "text": {
+                                                  "type": "string"
+                                                },
+                                                "language": {
+                                                  "description": "IANA language code specifying the language of the translation",
+                                                  "type": "string"
+                                                },
+                                                "toneGroups": {
+                                                  "type": "array",
+                                                  "minItems": 1,
+                                                  "items": {
+                                                    "required": [
+                                                      "tones"
+                                                    ],
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "tones": {
+                                                        "description": "One or more encodings of a distinct tonal variation for a lexical item or its translation",
+                                                        "minItems": 1,
+                                                        "type": "array",
+                                                        "items": {
+                                                          "type": "object",
+                                                          "additionalProperties": false,
+                                                          "properties": {
+                                                            "type": {
+                                                              "type": "string",
+                                                              "enum": [
+                                                                "ipa",
+                                                                "dictionarySpecific",
+                                                                "oupToneCode"
+                                                              ]
+                                                            },
+                                                            "value": {
+                                                              "type": "string"
+                                                            }
+                                                          },
+                                                          "required": [
+                                                            "type",
+                                                            "value"
+                                                          ]
+                                                        }
+                                                      }
+                                                    },
+                                                    "additionalProperties": false
+                                                  }
+                                                },
+                                                "type": {
+                                                  "type": "string"
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/2"
+                                            },
+                                            {
+                                              "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/2"
+                                            },
+                                            {
+                                              "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/4"
+                                            },
+                                            {
+                                              "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/1"
+                                            },
+                                            {
+                                              "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/2"
+                                            },
+                                            {
+                                              "$ref": "#/paths/~1sentences~1%7Bsource_lang%7D~1%7Bword_id%7D/get/responses/200/content/application~1json/schema/properties/results/items/properties/lexicalEntries/items/allOf/0/properties/sentences/items/allOf/8"
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "collocations": {
+                                        "description": "Words or terms that co-occur",
+                                        "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/3/properties/crossReferences"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/2"
+                                  },
+                                  {
+                                    "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/0/properties/entries/items/allOf/3"
+                                  },
+                                  {
+                                    "$ref": "#/components/schemas/EntriesResults/properties/results/items/allOf/0/properties/lexicalEntries/items/allOf/4"
+                                  },
+                                  {
+                                    "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/1"
+                                  },
+                                  {
+                                    "$ref": "#/paths/~1words~1%7Bsource_lang%7D/get/responses/200/content/application~1json/schema/properties/results/items/allOf/1/properties/pronunciations/items/allOf/2"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "domains": {
+                                        "description": "A subject, discipline, or branch of knowledge particular to the Sense",
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "text": {
+                                              "type": "string"
+                                            },
+                                            "id": {
+                                              "type": "string"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          "description": "Description of an entry for a particular part of speech"
+                        },
+                        {
+                          "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/1"
+                        },
+                        {
+                          "$ref": "#/components/schemas/LemmasResults/properties/results/items/properties/lexicalEntries/items/allOf/2"
+                        }
+                      ]
+                    }
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "The json object type. Could be 'headword', 'inflection' or 'phrase'"
+                  },
+                  "word": {
+                    "type": "string",
+                    "description": "(DEPRECATED) A given written or spoken realisation of an entry, lowercased."
+                  }
+                },
+                "additionalProperties": false,
+                "description": "Group of lexicalEntries related to a specific result in the Sentences endpoint for a given word ID."
+              }
+            }
+          },
+          "description": "Schema for the 'sentences' endpoint"
+        },
+        "Languages": {
+          "title": "Languages results",
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "type": "object",
+              "properties": {},
+              "description": "Additional Information provided by OUP"
+            },
+            "results": {
+              "minItems": 1,
+              "type": "array",
+              "description": "A list of languages available.",
+              "items": {
+                "minProperties": 1,
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "region": {
+                    "description": "Name of region.",
+                    "type": "string"
+                  },
+                  "source": {
+                    "description": "Name of source dictionary.",
+                    "type": "string"
+                  },
+                  "sourceLanguage": {
+                    "description": "Source language of the results",
+                    "properties": {
+                      "id": {
+                        "description": "IANA language code",
+                        "type": "string"
+                      },
+                      "language": {
+                        "type": "string",
+                        "description": "Language label."
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "targetLanguage": {
+                    "description": "Translation language of the results",
+                    "properties": {
+                      "id": {
+                        "description": "IANA language code",
+                        "type": "string"
+                      },
+                      "language": {
+                        "type": "string",
+                        "description": "Language label."
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": {
+                    "description": "whether monolingual or bilingual.",
+                    "type": "string",
+                    "enum": [
+                      "monolingual",
+                      "bilingual",
+                      "other"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "description": "Schema for the languages endpoint."
+        },
+        "Filters": {
+          "title": "Filters results",
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "type": "object",
+              "properties": {},
+              "description": "Additional Information provided by OUP"
+            },
+            "results": {
+              "minProperties": 1,
+              "type": "object",
+              "additionalProperties": false,
+              "description": "A mapping of filters available per endpoints.",
+              "properties": {
+                "entries": {
+                  "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                },
+                "lemmas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "translations": {
+                  "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                },
+                "sentences": {
+                  "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                },
+                "thesaurus": {
+                  "$ref": "#/components/schemas/Filters/properties/results/properties/lemmas"
+                }
+              }
+            }
+          },
+          "description": "Schema for the Filters endpoint."
+        },
+        "UtilityLabels": {
+          "title": "Labels results",
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "type": "object",
+              "properties": {},
+              "description": "Additional Information provided by OUP"
+            },
+            "results": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "en": {
+                    "type": "string",
+                    "description": "Label in English"
+                  }
+                },
+                "description": "the list of labels for an object. Every object can be a lexical category, or a register, or a domain."
+              },
+              "description": "Mapping of labels available."
+            }
+          },
+          "description": "Schema for lexicalCategories, grammaticalFeatures, registers and domains utility endpoints."
+        },
+        "ErrorSchema": {
+          "title": "Errors schema",
+          "required": [
+            "error"
+          ],
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string",
+              "description": "A human-readable explanation of the problem occurrence."
+            }
+          },
+          "description": "Schema for Errors."
+        }
+      },
+      "responses": {
+        "SearchSuccessfulResponse": {
+          "description": "Successful response. The Search endpoint is able to retrieve a max of 10000 results per query.",
+          "headers": {
+            "X-Request-Id": {
+              "description": "A unique ID generated for the request.\nWhen reporting a problem with a specific request, include the returned X-Request-Id.\n",
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wordlist"
+              }
+            }
+          }
+        },
+        "EntryNotFound": {
+          "description": "No entry was found matching the selection parameters (In Sandbox Only: first alphabet letter or equivalent has not been used); OR\nan invalid filter was specified.\n",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorSchema"
+              }
+            }
+          }
+        },
+        "EndpointNotFound": {
+          "description": "Unknown endpoint.\n",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorSchema"
+              }
+            }
+          }
+        },
+        "LanguageNotFound": {
+          "description": "Unknown sourceLanguage and/or targetLanguage.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorSchema"
+              }
+            }
+          }
+        },
+        "SearchNotFound": {
+          "description": "No entry was found matching the selection parameters (In Sandbox Only: first alphabet letter or equivalent has not been used).\n",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorSchema"
+              }
+            }
+          }
+        },
+        "UrlTooLong": {
+          "description": "URL is too long.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorSchema"
+              }
+            }
+          }
+        },
+        "TranslationsBadRequest": {
+          "description": "Not valid combination of source_lang and target_lang.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorSchema"
+              }
+            }
+          }
+        },
+        "InternalError": {
+          "description": "Internal error. An error occurred during processing.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorSchema"
+              }
+            }
+          }
+        },
+        "MissingAuthentication": {
+          "description": "Authentication parameters missing.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorSchema"
+              }
+            }
+          }
+        },
+        "InvalidParams": {
+          "description": "Invalid value for filters such as lexicalCategory, registers, domains, etc.\nInvalid value for fields projections accepted. It is not possible to project a non-existing field.\n",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorSchema"
+              }
+            }
+          }
+        },
+        "SearchInvalidParams": {
+          "description": "source_lang and target_lang can not be same; no words matching source_lang and/or translations; offset and limit exceeded 10000 together.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorSchema"
+              }
+            }
+          }
+        },
+        "UsageLimitError": {
+          "description": "Usage limit exceeded.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorSchema"
+              }
+            }
+          }
+        }
+      },
+      "parameters": {
+        "sourceLangPronunciationParam": {
+          "name": "source_lang",
+          "in": "path",
+          "description": "Language code of the source language in a pronunciation dataset.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "en-au",
+              "en-gb",
+              "en-in",
+              "en-us"
+            ]
+          }
+        },
+        "sourceLangMonolingualParam": {
+          "name": "source_lang",
+          "in": "path",
+          "description": "Language code of the source language in a monolingual dataset.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "en-gb",
+              "en-us",
+              "es",
+              "fr",
+              "gu",
+              "hi",
+              "lv",
+              "ro",
+              "ta",
+              "zh"
+            ]
+          }
+        },
+        "sourceLangBilingualParam": {
+          "name": "source_lang",
+          "in": "path",
+          "description": "Language code of the source language in a bilingual dataset.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "en",
+              "ar",
+              "de",
+              "el",
+              "es",
+              "ha",
+              "hi",
+              "id",
+              "it",
+              "mr",
+              "ms",
+              "pt",
+              "qu",
+              "ru",
+              "te",
+              "tt",
+              "zh"
+            ]
+          }
+        },
+        "targetLangBilingualParam": {
+          "name": "target_lang",
+          "in": "path",
+          "description": "Language code of the target language in a bilingual dataset.",
+          "required": true,
+          "example": "es",
+          "schema": {
+            "type": "string",
+            "enum": [
+              "en",
+              "ar",
+              "de",
+              "el",
+              "es",
+              "fa",
+              "ha",
+              "hi",
+              "id",
+              "ig",
+              "it",
+              "ka",
+              "mr",
+              "ms",
+              "pt",
+              "qu",
+              "ro",
+              "ru",
+              "tg",
+              "tt",
+              "yo",
+              "zh"
+            ]
+          }
+        },
+        "wordIdParam": {
+          "name": "word_id",
+          "in": "path",
+          "description": "The identifier for an Entry (case-sensitive).",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "ace"
+          }
+        },
+        "strictMatchParam": {
+          "name": "strictMatch",
+          "in": "query",
+          "description": "Specifies whether diacritics must match exactly. If \"false\", near-homographs for the given word_id will also be selected (e.g., *rose* matches both *rose* and *rosé*; similarly *rosé* matches both).",
+          "schema": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "grammaticalFeaturesParam": {
+          "name": "grammaticalFeatures",
+          "in": "query",
+          "description": "Selection filter: a comma-separated list of grammatical features ids to match on (default: all features).\nThe available grammatical features for a given language (or language pair) can be obtained from the /grammaticalfeatures/ endpoint.\n\nThe filter keeps all the entries in the response whose grammaticalFeatures \"id\" matches the values in the grammaticalFeatures parameter.\n```@javascript\n{\n  \"grammaticalFeatures\": [\n                          {\n                              \"id\": \"mass\",\n                              \"text\": \"Mass\",\n                              \"type\": \"Countability\"\n                          }\n                      ]\n}\n```\n",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "lexicalCategoryParam": {
+          "name": "lexicalCategory",
+          "in": "query",
+          "description": "Selection filter: a comma-separated list of lexical categories ids to match on (default: all categories).\nThe available lexical categories for a given language (or language pair) can be obtained from the /lexicalcategories/ endpoint.\n\nThe filter keeps all the entries in the response whose lexicalCategory \"id\" matches the values in the lexicalCategory parameter.\n```@javascript\n{\n  \"lexicalCategory\": {\n                  \"id\": \"adjective\",\n                  \"text\": \"Adjective\"\n              }\n}\n```\n",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "registersParam": {
+          "name": "registers",
+          "in": "query",
+          "description": "Selection filter: a comma-separated list of registers ids to match on (default: all registers).\nThe available registers for a given language (or language pair) can be obtained from the /registers/ endpoint.\n\nThe filter keeps all the senses and subsenses in the response whose registers \"id\" matches the values in the registers parameter.\n\n```@javascript\n{\n  \"registers\": [\n    {\n      \"id\": \"informal\",\n      \"text\": \"Informal\"\n\n    }]\n}\n```\n",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "domainsParam": {
+          "name": "domains",
+          "in": "query",
+          "description": "Selection filter: a comma-separated list of domains ids to match on (default: all domains).\nThe available domains for a given language (or language pair) can be obtained from the /domains/ endpoint.\n\nThe filter keeps all the senses and subsenses in the response whose domains \"id\" matches the values in the domains parameter.\n\n```@javascript\n{\n  \"domains\": [\n    {\n      \"id\": \"jazz\",\n      \"text\": \"Jazz\"\n\n    }]\n}\n```\n",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "fieldsParam": {
+          "name": "fields",
+          "in": "query",
+          "description": "A comma-separated list of data fields to return for the matched entries.\nValid field names are 'definitions', 'domains', 'etymologies', 'examples', 'pronunciations', 'regions', 'registers' and 'variantForms'.\n(a) If not specified, all available fields for each word_id are returned.\n(b) If specified and empty, the minimum payload for each word_id is returned.\n(c) If more field names are specified, then the minimum payload plus the specified fields for each word_id are returned.\n",
+          "allowEmptyValue": false,
+          "style": "form",
+          "explode": false,
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "definitions",
+                "domains",
+                "etymologies",
+                "examples",
+                "pronunciations",
+                "regions",
+                "registers",
+                "variantForms"
+              ]
+            }
+          }
+        },
+        "translationsFieldsParam": {
+          "name": "fields",
+          "in": "query",
+          "description": "A comma-separated list of data fields to return for the matched entries.\nValid field names are 'definitions', 'domains', 'etymologies', 'examples', 'pronunciations', 'regions', 'registers', 'variantForms', 'translations'.\n(a) If not specified, all available fields for each word_id are returned.\n(b) If specified and empty, the minimum payload for each word_id is returned.\n(c) If more field names are specified, then the minimum payload plus the specified fields for each word_id are returned.\n",
+          "allowEmptyValue": false,
+          "style": "form",
+          "explode": false,
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "definitions",
+                "domains",
+                "etymologies",
+                "examples",
+                "pronunciations",
+                "regions",
+                "registers",
+                "variantForms",
+                "translations"
+              ]
+            }
+          }
+        },
+        "appId": {
+          "name": "app_id",
+          "in": "header",
+          "description": "App ID Authentication Parameter",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "x-data-threescale-name": "app_ids"
+          },
+          "x-data-threescale-name": "app_ids"
+        },
+        "appKey": {
+          "name": "app_key",
+          "in": "header",
+          "description": "App Key Authentication Parameter",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "x-data-threescale-name": "app_keys"
+          },
+          "x-data-threescale-name": "app_keys"
+        }
+      }
+    }
+  }
